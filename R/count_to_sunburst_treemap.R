@@ -29,10 +29,14 @@
 #' starwars %>%
 #'   count(homeworld, name) %>%
 #'   count_to_treemap(sort_by_n = TRUE)
-count_to_sunburst <- function(count_data, fill_by_n = FALSE, sort_by_n = FALSE){
+count_to_sunburst <- function(count_data, fill_by_n = FALSE, sort_by_n = FALSE, , colors = NULL){
 
   params <- create_all_col_params(count_data, fill_by_n, sort_by_n)
-
+  # Add color information to the params if colors are provided
+  if (!is.null(colors)) {
+    params <- params %>%
+      dplyr::mutate(marker = list(colors = colors))
+  }
   purrr::exec(plotly::plot_ly,
               !!!params,
               type = "sunburst",
